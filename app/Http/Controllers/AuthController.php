@@ -16,11 +16,11 @@ class AuthController extends Controller
         $password = $request->password;
         if($email == 'admin@gmail.com' && $password == '1234'){
             // tạo session lưu email đăng nhập
-            \Illuminate\Support\Facades\Session::put('userEmail', $email);
+            session()->put('userEmail', $email);
             return redirect()->route('home');
         } else {
             // session flash chỉ được tồn tại duy nhất trong một request
-            \Illuminate\Support\Facades\Session::flash('error', 'Account not exist');
+            session()->flash('error', 'Account not exist');
             return redirect()->route('auth.showFormLogin');
         }
     }
