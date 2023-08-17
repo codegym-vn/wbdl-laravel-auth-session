@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    function showFormLogin(){
-        return view('login');
+    function showFormLogin(Request $request){
+        $email = $request->cookie('email');
+        return view('login', compact('email'));
     }
 
     function login(Request $request)  {
@@ -16,11 +17,13 @@ class AuthController extends Controller
         $password = $request->password;
         if($email == 'admin@gmail.com' && $password == '1234'){
             // tạo session lưu email đăng nhập
-            \Illuminate\Support\Facades\Session::put('userEmail', $email);
-            return redirect()->route('home');
+            session()->put('userEmail', $email);
+            // tao cookie
+            $cookie = cookie('email', $email, 60);
+            return redirect()->route('home')->cookie($cookie);
         } else {
             // session flash chỉ được tồn tại duy nhất trong một request
-            \Illuminate\Support\Facades\Session::flash('error', 'Account not exist');
+            session()->flash('error', 'Account not exist');
             return redirect()->route('auth.showFormLogin');
         }
     }
